@@ -15,13 +15,14 @@ input the graph data into the file like this:
 3 2
 ```
 
-the first line show the β of the pagerank path
-the second line is the nodes of the graph
-the third line is the topic node of the graph (for naive graph you should input all the node)
-the other lines are the edges
+* the first line show the β of the pagerank path
+* the second line is the nodes of the graph
+* the third line is the topic node of the graph (for naive graph you should input all the node)
+* the other lines are the edges
 
 
 ### run:
 
-> python calculator.py data.txt
-
+```py
+python calculator.py data.txt
+```
