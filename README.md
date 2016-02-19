@@ -24,5 +24,8 @@ input the graph data into the file like this:
 ### run:
 
 ```py
-python calculator.py data.txt
+python pagerank.py data.txt
 ```
+
+### todo:
+[ ] make the graph start with 1

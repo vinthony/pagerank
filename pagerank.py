@@ -4,10 +4,10 @@ from __future__ import division
 import sys
 
 
-def v_v(v1,v2,beta):
+def v_v(v1,v2):
     s = 0;
     for x in range(0,len(v1)):
-        s += v1[x]*v2[x]*beta
+        s += v1[x]*v2[x]
     return s;
 
 def m_v(M1,v,beta,topic):
@@ -16,9 +16,9 @@ def m_v(M1,v,beta,topic):
     for x in range(0,length):
         m = M1[x*length:(x+1)*length]
         if x in topic:
-            re.append(v_v(m,v,beta)+(1-beta)/len(topic))    
+            re.append(v_v(m,v)*beta+(1-beta)/len(topic))    
         else:
-            re.append(v_v(m,v,beta))    
+            re.append(v_v(m,v)*beta)    
     return re;
 
 def getcontentfromfile(filename):
@@ -52,10 +52,8 @@ def calculator(times,content):
     while(times):
         f = m_v(content['g'],f,content['beta'],content['topic'])
         times = times -1
-    print "f:%r" % f
+    print "topic:%r,beta:%r,result:%r" % (content['beta'],content['topic'],f)
 
-def topiccalculator(times,content,topic):
-    f = []
 
 def run():
     times = 1000;
