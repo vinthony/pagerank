@@ -5,10 +5,10 @@ import sys
 
 
 def v_v(v1,v2):
-    s = 0;
-    for x in range(0,len(v1)):
+    s = 0
+    for x in range(0, len(v1)):
         s += v1[x]*v2[x]
-    return s;
+    return s
 
 def m_v(M1,v,beta,topic):
     re = []
@@ -19,49 +19,58 @@ def m_v(M1,v,beta,topic):
             re.append(v_v(m,v)*beta+(1-beta)/len(topic))    
         else:
             re.append(v_v(m,v)*beta)    
-    return re;
+    return re
 
 def getcontentfromfile(filename):
     with open(filename) as f:
         contents = f.readlines()
-    re = {};
+    re = {}
     re['beta'] = float(contents[0])
-    le  = int(contents[1])
+    le = int(contents[1])
     re['length'] = le
-    fin = [ 0 for x in range(0,le*le)] 
+    matrix = [0 for x in range(0, le*le)]
     f = {}
-    w = []
+    vector = []
     for x in range(0,le):
         f[x] = []
-        w.append(1/le)   
+        vector.append(1/le)
+
     for item in contents[3:]:
         temp = [int(x) for x in item.split(' ')]
         f[temp[0]].append(temp[1])
+
     for index,x in f.items():
         temp_length = len(x) 
         i = 1/temp_length
         for y in x:
-            fin[index+y*le] = i
-    re['g'] = fin
-    re['f'] = w   
-    re['topic'] = [ int(x) for x in contents[2].split(' ') ]   
+            matrix[index+y*le] = i
+    re['matrix'] = matrix
+    re['vector'] = vector
+    re['topic'] = [ int(x) for x in contents[2].split(' ')]
     return re
-
-def calculator(times,content):
-    f = content['f']
-    while(times):
-        f = m_v(content['g'],f,content['beta'],content['topic'])
-        times = times -1
-    print "topic:%r,beta:%r,result:%r" % (content['beta'],content['topic'],f)
+def getdiff(v0,v1):
+    re = 0
+    for index,x in enumerate(v0):
+        re += abs(v0[index]-v1[index])
+    return re
+def calculator(tolerate,content):
+    f = content['vector']
+    diff = 1
+    count = 0
+    while(diff > tolerate):
+        f_new = m_v(content['matrix'],f,content['beta'],content['topic'])
+        diff = getdiff(f,f_new)
+        f = f_new
+        count = count+1
+    print "iterator:%rtimes,beta:%r,topic:%r,result:%r" % (count,content['beta'],content['topic'],f)
 
 
 def run():
-    times = 1000;
+    tolerate = 0.00001
     filename = sys.argv[1]
     content = getcontentfromfile(filename)
-    calculator(times,content)
-
+    calculator(tolerate,content)
 
 
 if __name__ == '__main__':
-    run();
+    run()
