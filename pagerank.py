@@ -30,34 +30,38 @@ def getcontentfromfile(filename):
     re['length'] = le
     matrix = [0 for x in range(0, le*le)]
     f = {}
-    vector = []
-    for x in range(0,le):
-        f[x] = []
-        vector.append(1/le)
+    vector = [1/le for x in range(0,le)]
 
+    for x in range(0,le+1):
+        f[x] = []
     for item in contents[3:]:
         temp = [int(x) for x in item.split(' ')]
         f[temp[0]].append(temp[1])
 
     for index,x in f.items():
+        if index == 0:
+            continue
         temp_length = len(x) 
         i = 1/temp_length
         for y in x:
-            matrix[index+y*le] = i
+            matrix[(index-1)+(y-1)*le] = i
     re['matrix'] = matrix
     re['vector'] = vector
     re['topic'] = [ int(x) for x in contents[2].split(' ')]
     return re
+    
 def getdiff(v0,v1):
     re = 0
     for index,x in enumerate(v0):
         re += abs(v0[index]-v1[index])
     return re
+
 def calculator(tolerate,content):
     f = content['vector']
     diff = 1
     count = 0
     while(diff > tolerate):
+        print "calculator:%r,%r" %(content['matrix'],f)
         f_new = m_v(content['matrix'],f,content['beta'],content['topic'])
         diff = getdiff(f,f_new)
         f = f_new
