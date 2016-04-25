@@ -2,7 +2,9 @@
 
 from __future__ import division
 import sys
-
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
 
 def v_v(v1,v2):
     s = 0
@@ -30,6 +32,7 @@ def getcontentfromfile(filename):
     re['length'] = le
     matrix = [0 for x in range(0, le*le)]
     f = {}
+    re['graphs'] = []
     vector = [1/le for x in range(0,le)]
 
     for x in range(0,le+1):
@@ -37,6 +40,7 @@ def getcontentfromfile(filename):
     for item in contents[3:]:
         temp = [int(x) for x in item.split(' ')]
         f[temp[0]].append(temp[1])
+        re['graphs'].append(tuple([temp[0],temp[1]]))
 
     for index,x in f.items():
         if index == 0:
@@ -66,6 +70,13 @@ def calculator(tolerate,content):
         diff = getdiff(f,f_new)
         f = f_new
         count = count+1
+    G = nx.Graph()
+    for x in content['graphs']:
+        G.add_edge(x[0],x[1])
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G,pos)
+    nx.draw_networkx_edges(G,pos)
+    plt.show()
     print "iterator:%rtimes,beta:%r,topic:%r,result:%r" % (count,content['beta'],content['topic'],f)
 
 

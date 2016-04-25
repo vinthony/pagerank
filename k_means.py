@@ -13,7 +13,6 @@ import matplotlib
 
 import numpy as np
 import pylab as pl
-import matplotlib.animation as animation
 
 MAX_INT = 2**20;
 # k-means
