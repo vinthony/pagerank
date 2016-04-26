@@ -33,7 +33,7 @@ def bfs(from_node,edges):
 		for edge in edges: #search each edges 
 			node_from,node_to,node_edge = edge
 			if node == node_from: # calculate the end node. adjusted
-				updated_weight = weight + node_edge['weight']
+				updated_weight = weight + node_edge
 				#if min_value > updated_weight:
 				min_value = updated_weight
 				node_next = node_to		
@@ -43,7 +43,6 @@ def bfs(from_node,edges):
 					path[(from_node,node_next)] = path[(from_node,node)] +":"+'%r,%r'% (node,node_next)
 				else:
 					path[(from_node,node_next)] = '%r,%r'% (node,node_next)
-	#key(x,y):[(1,2),(2,3),(3,4)]	
 	return path
 
 def remove_x_from_edges(cutted,edges):
@@ -55,41 +54,37 @@ def remove_x_from_edges(cutted,edges):
 
 def readfromfile(filename):
 	edges = []
-	nodes = []
 	with open(filename) as f:
 		for line in f.readlines():
 			if ":" in line:
 				nodes_number,edge_number = [int(x) for x in line.split(':')]
 			else:
-				from_node,to_node = [int(item) for item in line.split(',')]
-				edges.append((from_node,to_node,{'weight':1})) # weight always equals 1
-				if from_node not in nodes:
-					nodes.append(from_node)
+				splited_line = line.split(',');
+				from_node,to_node = [item for item in splited_line]
+				edges.append((int(from_node),int(to_node),float(1))) # weight always equals 1
+	nodes = [x for x in range(1,nodes_number)]
 	return nodes,edges		
 
+# def get_cluster(edges,):
+		# return the new cluster of edges
 
-def main(filename,cluster):
+def main(filename):
 	nodes,edges = readfromfile(filename)
 	nodes_associate = []
 	betweeness = {}
-
 	cutted = "";
 	final = [];
-	# G = nx.Graph()
+	# G = nx.DiGraph()
 	# G.add_nodes_from(nodes)
-	# G.add_edges_from(edges)
-	# plt.show()
-	# nodes=nx.draw_networkx_nodes(G,pos=nx.spring_layout(G)).get_paths()
-	# nx.draw_networkx_labels(G,nodes)
-	# nx.draw_spectral(G,hold=True)
-	# plt.savefig("path.png")
+	# G.add_weighted_edges_from(edges)
+	# position = nx.nx_agraph.graphviz_layout(G)
+	# nx.draw_networkx_edges(G,pos=position,edgelist=edges,arrows=False)
 	while(1):
 		betweeness.clear()
 		nodes_associate = []
 		temp_value = - INT_MAX
 		final_value = - INT_MAX
 		for node in nodes:
-			#calculator each node's shortest path to anyother nodes.
 			paths = bfs(node,edges)
 			nodes_associate.append(paths)
 		for ass in nodes_associate:
@@ -104,14 +99,11 @@ def main(filename,cluster):
 			if  final_value < temp_value: # find the maxmum betweeness of key.
 				final_value = temp_value
 				cutted = key
-		print betweeness
 		print "cutted:%r,betweeness:%r" % (cutted,betweeness[cutted])		
 		edges = remove_x_from_edges(cutted,edges);
 		final.append(cutted)	
-		if len(edges) - int(cluster) < 0:
+		if not edges:
 			break
-	for x in final:
-		print x		
 			 
 if __name__ == '__main__':
-	main(sys.argv[1],sys.argv[2])
+	main(sys.argv[1])

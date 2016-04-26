@@ -65,16 +65,17 @@ def calculator(tolerate,content):
     diff = 1
     count = 0
     while(diff > tolerate):
-        print "calculator:%r,%r" %(content['matrix'],f)
         f_new = m_v(content['matrix'],f,content['beta'],content['topic'])
         diff = getdiff(f,f_new)
         f = f_new
         count = count+1
-    G = nx.Graph()
+    G = nx.MultiDiGraph()
     for x in content['graphs']:
         G.add_edge(x[0],x[1])
-    pos = nx.spring_layout(G)
+    label = dict((n,f[n-1]) for n in range(1,len(f)+1))
+    pos = nx.nx_agraph.graphviz_layout(G)
     nx.draw_networkx_nodes(G,pos)
+    nx.draw_networkx_labels(G,pos,label)
     nx.draw_networkx_edges(G,pos)
     plt.show()
     print "iterator:%rtimes,beta:%r,topic:%r,result:%r" % (count,content['beta'],content['topic'],f)

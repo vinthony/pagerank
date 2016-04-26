@@ -104,7 +104,7 @@ def draw(points,centroid,k):
     for cent in centroid:
         x_value.append(cent[0])
         y_value.append(cent[1])
-        pl.plot(x_value,y_value,'x'+style[cent[2]])
+        pl.plot(x_value,y_value,'x'+style[cent[2]],markersize=20)
     pl.show()    
     # matplotlib.animation.TimedAnimation(pl)
 

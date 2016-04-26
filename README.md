@@ -29,3 +29,10 @@ python pagerank.py data.txt
 
 ### todo:
 [ ] make the graph start with 1
+
+
+
+* python pagerank.py data.txt
+* python test_k_means.py 1000 5
+* python community.py test2.txt
+* python test_pagerank.py 1000
